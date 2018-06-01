@@ -40,7 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\VMGIgnore.cs" />
+    <Compile Include="Annotations\VMGInclude.cs" />
+    <Compile Include="Annotations\Enums.cs" />
+    <Compile Include="Annotations\VMGAttributeBase.cs" />
+    <Compile Include="Annotations\VMGInheritFromViewModel.cs" />
+    <Compile Include="Annotations\VMGInherit.cs" />
+    <Compile Include="Annotations\VMGPropertyOptions.cs" />
+    <Compile Include="ConfigurationResult.cs" />
+    <Compile Include="Exceptions\AttributeHasNoAliasException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
