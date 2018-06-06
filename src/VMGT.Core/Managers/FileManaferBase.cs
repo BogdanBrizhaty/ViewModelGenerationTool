@@ -13,18 +13,22 @@ namespace VMGT.Core.Managers
 
         public void Append(string filePath, TContent content, params object[] customParameters)
         {
+            CheckFileExistance(filePath);
             AppendToFile(filePath, content, customParameters);
         }
         public TContent GetContent(string filePath, params object[] customParameters)
         {
+            CheckFileExistance(filePath);
             return GetContentFrom(filePath, customParameters);
         }
         public void Write(string filePath, TContent content, params object[] customParameters)
         {
+            CheckFileExistance(filePath);
             WriteToFile(filePath, content, customParameters);
         }
         public virtual Stream ReadStream(string filePath)
         {
+            CheckFileExistance(filePath);
             return File.OpenRead(filePath);
         }
         #endregion
@@ -40,6 +44,12 @@ namespace VMGT.Core.Managers
         public bool FileExists(string filePath)
         {
             return File.Exists(filePath);
+        }
+
+        private void CheckFileExistance(string filePath)
+        {
+            if (!FileExists(filePath))
+                throw new FileNotFoundException("File was not found.", filePath);
         }
     }
 }

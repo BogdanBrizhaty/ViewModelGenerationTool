@@ -9,47 +9,50 @@ namespace VMGT.Core.Managers
 {
     public class TextFileManager : FileManagerBase<string>
     {
-        private readonly Encoding _defaultEncoding = Encoding.UTF8;
+        public Encoding DefaultEncoding { get; }
+
+        #region Constructors
+        public TextFileManager()
+        {
+
+        }
 
         public TextFileManager(Encoding defaultEncoding)
         {
             if (defaultEncoding == null)
                 throw new ArgumentNullException(nameof(defaultEncoding));
 
-            _defaultEncoding = defaultEncoding;
+            DefaultEncoding = defaultEncoding;
         }
+        #endregion
 
         protected override void AppendToFile(string fPath, string content, params object[] customParameters)
         {
-            var encoding = GetEncoding(customParameters) ?? _defaultEncoding;
-            
-            using (var writer = new StreamWriter(fPath, true, encoding))
-            {
-                writer.Write(content);
-                writer.Close();
-            }
+            WriteToFile(fPath, content, true, GetEncoding(customParameters));
         }
 
         protected override string GetContentFrom(string fPath, params object[] customParameters)
         {
-            var encoding = GetEncoding(customParameters) ?? _defaultEncoding;
-            return File.ReadAllText(fPath, encoding);
+            return File.ReadAllText(fPath, GetEncoding(customParameters));
         }
 
         protected override void WriteToFile(string fPath, string content, params object[] customParameters)
         {
-            var encoding = GetEncoding(customParameters) ?? _defaultEncoding;
+            WriteToFile(fPath, content, false, GetEncoding(customParameters));
+        }
 
-            using (var writer = new StreamWriter(fPath, false, encoding))
+        protected Encoding GetEncoding(params object[] parameters)
+        {
+            return (parameters.FirstOrDefault(cp => cp.GetType() == typeof(Encoding)) as Encoding) ?? DefaultEncoding;
+        }
+
+        private void WriteToFile(string fPath, string content, bool append, Encoding encoding)
+        {
+            using (var writer = new StreamWriter(fPath, append, encoding))
             {
                 writer.Write(content);
                 writer.Close();
             }
-        }
-        
-        private Encoding GetEncoding(params object[] parameters)
-        {
-            return parameters.FirstOrDefault(cp => cp.GetType() == typeof(Encoding)) as Encoding;
         }
     }
 }
